@@ -1,11 +1,5 @@
 {
   "framework": "nextjs",
   "buildCommand": "npm run build",
-  "outputDirectory": ".next",
-  "env": {
-    "NEXT_PUBLIC_API_URL": "@api_url",
-    "NEXT_PUBLIC_RAZORPAY_KEY_ID": "@razorpay_key_id",
-    "NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME": "@cloudinary_cloud_name",
-    "NEXT_PUBLIC_WHATSAPP_NUMBER": "@whatsapp_number"
-  }
+  "outputDirectory": ".next"
 }
