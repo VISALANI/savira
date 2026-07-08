@@ -1,0 +1,94 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Poppins:wght@300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --sage: #4F6F52;
+  --ivory: #F8F5F0;
+  --gold: #C8A96B;
+  --charcoal: #2E2E2E;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--ivory);
+  color: var(--charcoal);
+  font-family: 'Poppins', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-sage text-white px-6 py-3 rounded-full font-poppins font-medium text-sm tracking-wide hover:bg-sage-dark transition-all duration-300 shadow-sm hover:shadow-md;
+  }
+
+  .btn-outline {
+    @apply border border-sage text-sage px-6 py-3 rounded-full font-poppins font-medium text-sm tracking-wide hover:bg-sage hover:text-white transition-all duration-300;
+  }
+
+  .btn-gold {
+    @apply bg-gold text-white px-6 py-3 rounded-full font-poppins font-medium text-sm tracking-wide hover:bg-gold-light transition-all duration-300 shadow-sm;
+  }
+
+  .card-product {
+    @apply bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300;
+  }
+
+  .section-title {
+    @apply font-playfair text-3xl md:text-4xl text-charcoal text-center;
+  }
+
+  .section-subtitle {
+    @apply font-poppins text-sm text-charcoal-light text-center tracking-widest uppercase mt-2;
+  }
+
+  .input-field {
+    @apply w-full border border-gray-200 rounded-xl px-4 py-3 font-poppins text-sm text-charcoal focus:outline-none focus:border-sage focus:ring-1 focus:ring-sage bg-white transition-all;
+  }
+
+  .badge-discount {
+    @apply bg-red-500 text-white text-xs font-poppins font-medium px-2 py-1 rounded-full;
+  }
+
+  .badge-new {
+    @apply bg-sage text-white text-xs font-poppins font-medium px-2 py-1 rounded-full;
+  }
+}
+
+/* Swiper custom styles */
+.swiper-pagination-bullet-active {
+  background-color: var(--sage) !important;
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+  color: var(--sage) !important;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--ivory);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--sage);
+  border-radius: 3px;
+}
+
+/* Mobile bottom nav safe area */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 16px);
+}
