@@ -2,6 +2,9 @@
 
 > Premium Indian Ethnic Women's Clothing Brand
 
+page info
+https://visalani.github.io/savira/
+
 ## Project Structure
 
 ```
