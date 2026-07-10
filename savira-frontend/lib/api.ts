@@ -7,7 +7,7 @@ const DEMO_MODE = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
 const api = axios.create({
   baseURL: API_URL,
   headers: { "Content-Type": "application/json" },
-  timeout: 5000, // 5s timeout so UI doesn't hang waiting for offline backend
+  timeout: 30000, // 30s — accounts for Render free-tier cold starts
 });
 
 // Attach JWT token to every request

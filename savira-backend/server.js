@@ -12,11 +12,34 @@ const app = express();
 // ── Security headers
 app.use(helmet());
 
-// ── CORS
+// ── CORS — accept requests from Vercel frontend and localhost
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  "http://localhost:3000",
+  "https://localhost:3000",
+].filter(Boolean);
+
 app.use(cors({
-  origin: process.env.CLIENT_URL || "http://localhost:3000",
+  origin: (origin, callback) => {
+    // Allow requests with no origin (Postman, server-to-server, etc.)
+    if (!origin) return callback(null, true);
+    // Allow any Vercel subdomain for the savira project
+    if (
+      allowedOrigins.includes(origin) ||
+      /^https:\/\/savira.*\.vercel\.app$/.test(origin)
+    ) {
+      return callback(null, true);
+    }
+    console.warn(`CORS blocked: ${origin}`);
+    return callback(new Error(`CORS: Origin ${origin} not allowed`), false);
+  },
   credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
 }));
+
+// Handle preflight requests
+app.options("*", cors());
 
 // ── Global rate limit
 app.use("/api/", rateLimit({ windowMs: 15 * 60 * 1000, max: 300 }));
@@ -28,8 +51,8 @@ app.use(express.urlencoded({ extended: true }));
 // ── Sanitize MongoDB query injection
 app.use(mongoSanitize());
 
-// ── Logging
-if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
+// ── Logging — always on so production errors are visible in Render logs
+app.use(morgan("combined"));
 
 // ── Routes
 app.use("/api/auth", require("./routes/auth"));
