@@ -5,14 +5,32 @@ import { adminAPI } from "@/lib/api";
 import { formatPrice } from "@/lib/utils";
 import { FiShoppingBag, FiPackage, FiUsers, FiTrendingUp, FiClock, FiCheckCircle, FiAlertCircle, FiArrowUpRight } from "react-icons/fi";
 
-const STATUS_COLORS = { processing: "bg-yellow-50 text-yellow-600 border-yellow-100", shipped: "bg-blue-50 text-blue-600 border-blue-100", out_for_delivery: "bg-purple-50 text-purple-600 border-purple-100", delivered: "bg-green-50 text-green-600 border-green-100", cancelled: "bg-red-50 text-red-500 border-red-100" };
+interface RecentOrder {
+  _id: string;
+  user?: { name: string };
+  total: number;
+  orderStatus: string;
+  createdAt: string;
+}
+interface MonthlySale { month: string; revenue: number; orders: number; }
+interface TopProduct { name: string; sold: number; revenue: number; }
+interface DashboardData {
+  totalRevenue: number;
+  totalOrders: number;
+  totalProducts: number;
+  totalUsers: number;
+  recentOrders: RecentOrder[];
+  monthlySales: MonthlySale[];
+  topProducts: TopProduct[];
+}
+const STATUS_COLORS: Record<string, string> = { processing: "bg-yellow-50 text-yellow-600 border-yellow-100", shipped: "bg-blue-50 text-blue-600 border-blue-100", out_for_delivery: "bg-purple-50 text-purple-600 border-purple-100", delivered: "bg-green-50 text-green-600 border-green-100", cancelled: "bg-red-50 text-red-500 border-red-100" };
 
-const MOCK = { totalRevenue: 284500, totalOrders: 142, totalProducts: 68, totalUsers: 312, recentOrders: Array.from({length:8},(_,i)=>({_id:`o${i}`,user:{name:["Priya S.","Ananya R.","Meera P.","Kavya N.","Ritu S.","Divya K.","Sneha M.","Pooja T."][i]},total:[1299,2499,1799,999,1599,2999,899,1999][i],orderStatus:["processing","shipped","delivered","processing","out_for_delivery","delivered","processing","shipped"][i],createdAt:new Date(Date.now()-i*86400000).toISOString()})), monthlySales:[{month:"Jan",revenue:18000,orders:12},{month:"Feb",revenue:22000,orders:15},{month:"Mar",revenue:31000,orders:21},{month:"Apr",revenue:28000,orders:18},{month:"May",revenue:45000,orders:30},{month:"Jun",revenue:38000,orders:25}], topProducts:[{name:"Floral Anarkali Kurti",sold:48,revenue:62352},{name:"Festive Silk Co-ord Set",sold:35,revenue:87465},{name:"Cotton Straight Kurti",sold:62,revenue:55738},{name:"Office Wear Kurti Set",sold:29,revenue:52171},{name:"Block Print Kurti",sold:41,revenue:45039}] };
+const MOCK: DashboardData = { totalRevenue: 284500, totalOrders: 142, totalProducts: 68, totalUsers: 312, recentOrders: Array.from({length:8},(_,i)=>({_id:`o${i}`,user:{name:["Priya S.","Ananya R.","Meera P.","Kavya N.","Ritu S.","Divya K.","Sneha M.","Pooja T."][i]},total:[1299,2499,1799,999,1599,2999,899,1999][i],orderStatus:["processing","shipped","delivered","processing","out_for_delivery","delivered","processing","shipped"][i],createdAt:new Date(Date.now()-i*86400000).toISOString()})), monthlySales:[{month:"Jan",revenue:18000,orders:12},{month:"Feb",revenue:22000,orders:15},{month:"Mar",revenue:31000,orders:21},{month:"Apr",revenue:28000,orders:18},{month:"May",revenue:45000,orders:30},{month:"Jun",revenue:38000,orders:25}], topProducts:[{name:"Floral Anarkali Kurti",sold:48,revenue:62352},{name:"Festive Silk Co-ord Set",sold:35,revenue:87465},{name:"Cotton Straight Kurti",sold:62,revenue:55738},{name:"Office Wear Kurti Set",sold:29,revenue:52171},{name:"Block Print Kurti",sold:41,revenue:45039}] };
 
 export default function AdminDashboard() {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
-  useEffect(() => { adminAPI.getDashboard().then(r=>setData(r.data)).catch(()=>setData(MOCK)).finally(()=>setLoading(false)); }, []);
+  useEffect(() => { adminAPI.getDashboard().then(r=>setData(r.data as DashboardData)).catch(()=>setData(MOCK)).finally(()=>setLoading(false)); }, []);
   if (loading) return <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 animate-pulse">{Array.from({length:8}).map((_,i)=><div key={i} className="bg-white rounded-2xl h-28 shadow-sm"/>)}</div>;
   if (!data) return null;
   const d = data;
